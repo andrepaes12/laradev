@@ -14,6 +14,6 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    // rota inicial novo
+    // rota inicial
     return view('welcome');
 });
