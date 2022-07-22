@@ -15,7 +15,7 @@
         <td>{{$property->title}}</td>
         <td>R$ <?= number_format($property->rental_price, 2, ",", ".")?></td>
         <td>R$ <?= number_format($property->sale_price, 2, ",", ".")?></td>
-        <td><a href="#">Ver Mais</a> | <a href="#">Editar</a> | <a href="#">Remover</a></td>
+        <td><a href="{{url('/imoveis/show/'.$property->url)}}">Ver Mais</a> | <a href="{{url('/imoveis/edit/'.$property->url)}}">Editar</a> | <a href="{{url('/imoveis/remove/'.$property->url)}}">Remover</a></td>
     </tr>
     @endforeach
 
