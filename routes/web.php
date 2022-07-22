@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\PropertyController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -17,3 +18,7 @@ Route::get('/', function () {
     // rota inicial
     return view('welcome');
 });
+
+Route::get('/imoveis', [PropertyController::class, 'index'])->name('property.index');
+Route::get('/imoveis/novo', [PropertyController::class, 'create'])->name('property.create');
+Route::post('/imoveis/store', [PropertyController::class, 'store'])->name('property.store');
