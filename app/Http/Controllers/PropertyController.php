@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Property;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
@@ -12,7 +13,10 @@ class PropertyController extends Controller
     public function index()
     {
         // não é uma boa prática incluir a lógica do BD no Controller
-        $properties = DB::select("SELECT * FROM properties");
+        // $properties = DB::select("SELECT * FROM properties");
+
+        // camada Model = SELECT
+        $properties = Property::all();
 
         // envia os dados da variável $properties para VIEW
         return view('property.index')->with('properties', $properties);
@@ -20,12 +24,14 @@ class PropertyController extends Controller
 
     public function show($url)
     {
-        $property = DB::select("SELECT * FROM properties WHERE url = ?", [$url]);
+        // $property = DB::select("SELECT * FROM properties WHERE url = ?", [$url]);
+
+        $property = Property::where('url', $url)->get();
 
         if (!empty($property)){
             return view('property.show')->with('property', $property);
         } else {
-            return redirect()->view('property.index');
+            return redirect()->route('property.index');
         }
     }
 
@@ -37,22 +43,37 @@ class PropertyController extends Controller
     public function store(Request $request)
     {
         $url = $this->setUrl($request->title);
+
+        // array p/ Facade
+        // $property = [
+        //     $request->title,
+        //     $request->description,
+        //     $request->rental_price,
+        //     $request->sale_price,
+        //     $url
+        // ];
+
+        // DB::insert("INSERT INTO properties (title, description, rental_price, sale_price, url) VALUES (?, ?, ?, ?, ?)", $property);
+
+        // ORM Eloquent - camada model - requer Array Assoc
         $property = [
-            $request->title,
-            $request->description,
-            $request->rental_price,
-            $request->sale_price,
-            $url
+            'title' => $request->title,
+            'description' => $request->description,
+            'rental_price' => $request->rental_price,
+            'sale_price' => $request->sale_price,
+            'url' => $url
         ];
 
-        DB::insert("INSERT INTO properties (title, description, rental_price, sale_price, url) VALUES (?, ?, ?, ?, ?)", $property);
+        Property::create($property);
 
         return redirect()->route('property.index');
     }
 
     public function edit($url)
     {
-        $property = DB::select("SELECT * FROM properties WHERE url = ?", [$url]);
+        // $property = DB::select("SELECT * FROM properties WHERE url = ?", [$url]);
+
+        $property = Property::where('url', $url)->get();
 
         if (!empty($property)){
             return view('property.edit')->with('property', $property);
@@ -64,20 +85,36 @@ class PropertyController extends Controller
     public function update(Request $request, $id)
     {
         $url = $this->setUrl($request->title);
-        $title = $request->title;
-        $description = $request->description;
-        $rental = $request->rental_price;
-        $sale = $request->sale_price;
-        // $url = $request->url;
 
-        DB::update('UPDATE properties SET title = ?, description = ?, rental_price = ?, sale_price = ?, url = ? WHERE id = ?', [$title, $description, $rental, $sale, $url, $id]);
+        // $title = $request->title;
+        // $description = $request->description;
+        // $rental = $request->rental_price;
+        // $sale = $request->sale_price;
+
+        // DB::update('UPDATE properties SET title = ?, description = ?, rental_price = ?, sale_price = ?, url = ? WHERE id = ?', [$title, $description, $rental, $sale, $url, $id]);
+
+        // buscar os dados para atualização através PK = $id
+        $property = Property::find($id);
+
+        //asscociar cada atributo do objeto $property aos respectivos dados da requisição $request
+        $property->title = $request->title;
+        $property->description = $request->description;
+        $property->rental_price = $request->rental_price;
+        $property->sale_price = $request->sale_price;
+        $property->url = $url;
+
+        // salvar no BD
+        $property->save();
+
 
         return redirect()->route('property.index');
     }
 
     public function destroy($url)
     {
-        $property = DB::select("SELECT * FROM properties WHERE url = ?", [$url]);
+        // $property = DB::select("SELECT * FROM properties WHERE url = ?", [$url]);
+
+        $property = Property::where('url', $url)->get();
 
         if (!empty($property)){
             DB::delete("DELETE FROM properties WHERE url = ?", [$url]);
@@ -90,7 +127,8 @@ class PropertyController extends Controller
     {
         $slug = Str::slug($title);
 
-        $properties = DB::select("SELECT * FROM properties");
+        // $properties = DB::select("SELECT * FROM properties");
+        $properties = Property::all();
 
         $t = 0;
 
