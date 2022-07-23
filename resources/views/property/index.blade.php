@@ -1,6 +1,8 @@
-<h1>Listagem de Imóveis</h1>
+@extends('property.master')
 
-<p><a href="{{route('property.create')}}">Cadastrar novo imóvel</a></p>
+@section('content')
+
+<h1>Listagem de Imóveis</h1>
 
 <table>
     <tr>
@@ -20,3 +22,5 @@
     @endforeach
 
 </table>
+
+@endsection

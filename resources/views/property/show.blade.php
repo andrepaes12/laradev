@@ -1,3 +1,7 @@
+@extends('property.master')
+
+@section('content')
+
 <h1>Detalhes do Imóvel</h1>
 
 @if (!empty($property))
@@ -9,5 +13,4 @@
     @endforeach
 @endif
 
-<a href='{{route('property.index')}}'>VOLTAR</a>
-
+@endsection

@@ -1,3 +1,7 @@
+@extends('property.master')
+
+@section('content')
+
 <h1>Formulário de Edição :: Imóveis</h1>
 
 <?php
@@ -26,3 +30,5 @@
 
     <button type="submit">Atualizar Imóvel</button>
 </form>
+
+@endsection

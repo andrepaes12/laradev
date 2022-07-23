@@ -1,3 +1,7 @@
+@extends('property.master')
+
+@section('content')
+
 <h1>Formulário de Cadastro :: Imóveis</h1>
 
 {{-- action = rota do controlador que fará o registro --}}
@@ -17,3 +21,5 @@
 
     <button type="submit">Cadastrar Imóvel</button>
 </form>
+
+@endsection
